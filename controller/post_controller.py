@@ -8,17 +8,25 @@ from models.post import Post
 class PostController:
 
     @staticmethod
-    def fetch_post(post_url) -> Post:
+    async def fetch_post(post_url, session, ws) -> Post:
+
+        async def scrape(session):
+            async with session.get(post_url) as res:
+                if res.status == 200:
+                    text = await res.text()
+                    return text
 
         #tag filtering to check for js scripts
         post_id = post_url.split('-')[-1]
 
-        response = requests.get(post_url)
+        response_text = await scrape(session)
 
         graphql_query_data_json = PostController._parse_graphql_response_in_json(
-            response.text)
+            response_text)
 
         post = Post(graphql_query_data_json, post_id)
+        print(post.id)
+        ws.send(post.to_json())
         return post
 
     @staticmethod
