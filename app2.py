@@ -3,22 +3,10 @@ from flask import Flask, render_template, request
 from controller.post_controller import PostController
 import aiohttp
 import simple_websocket
+from flask_ngrok import run_with_ngrok
 
 app = Flask(__name__, template_folder='views')
 app.config['SECRET_KEY'] = 'secret!'
-
-
-@app.route('/echo', websocket=True)
-def echo():
-    ws = simple_websocket.Server(request.environ)
-    try:
-        while True:
-            data = ws.receive()
-            print(data)
-            ws.send(data)
-    except simple_websocket.ConnectionClosed:
-        pass
-    return ''
 
 
 @app.route('/')
@@ -26,35 +14,30 @@ def index():
     return render_template('index.html')
 
 
-@app.route('/search/<string:tag>', websocket=True)
+@app.route('/search/<string:tag>')
 def search(tag):
-    ws = simple_websocket.Server(request.environ)
     post_urls_and_related_tags = PostController.fetch_latest_post_urls_and_related_tags(
         tag)
+    return post_urls_and_related_tags
+
+
+@app.route('/crawl', websocket=True)
+def crawl():
+    ws = simple_websocket.Server(request.environ)
+    post_urls = ws.receive()
+    print(post_urls)
     try:
-        asyncio.new_event_loop().run_until_complete(
-            crawl_posts(post_urls_and_related_tags['post_urls'], ws))
+        #only for windows
+        asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+        asyncio.new_event_loop().run_until_complete(crawl_posts(post_urls, ws))
         ws.close()
     except (KeyboardInterrupt, EOFError, simple_websocket.ConnectionClosed):
         ws.close()
         print('connection closed')
-    return post_urls_and_related_tags
-
-
-# @app.route('/crawl', websocket=True)
-# def handle_my_custom_event(post_urls):
-#     print('received post_urls: ' + str(post_urls))
-#     ws = simple_websocket.Server(request.environ)
-#     try:
-#         while True:
-#             data = ws.receive()
-#             print(data)
-#             ws.send(data)
-#             asyncio.get_event_loop().run_until_complete(
-#                 crawl_posts(post_urls, ws))
-#     except simple_websocket.ConnectionClosed:
-#         pass
-#     return ''
+    except Exception as e:
+        ws.close()
+        print('connection closed ' + e)
+    return None
 
 
 async def crawl_posts(post_urls, ws):
@@ -68,4 +51,5 @@ async def crawl_posts(post_urls, ws):
 
 
 if __name__ == "__main__":
+    run_with_ngrok(app)
     app.run()
