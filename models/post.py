@@ -74,7 +74,7 @@ class Post:
         elif tag == 'img':
             image_url = data["metadata"]["__ref"].split("ImageMetadata:")[1]
             image_url = MEDIUM_ASSETS_BASE_URL + image_url
-            return f"<img src='{image_url}'>"
+            return f"<img src='{image_url}' height=300>"
 
         elif tag == "mixtape_embeded":
             return None
