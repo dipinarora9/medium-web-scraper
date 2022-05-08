@@ -1,9 +1,11 @@
 import asyncio
+import json
 from flask import Flask, render_template, request
 from controller.post_controller import PostController
 import aiohttp
 import simple_websocket
 from flask_ngrok import run_with_ngrok
+from flask_cors import CORS, cross_origin
 
 app = Flask(__name__, template_folder='views')
 app.config['SECRET_KEY'] = 'secret!'
@@ -25,7 +27,7 @@ def search(tag):
 def crawl():
     ws = simple_websocket.Server(request.environ)
     post_urls = ws.receive()
-    print(post_urls)
+    post_urls = json.loads(post_urls)
     try:
         #only for windows
         asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
@@ -37,7 +39,7 @@ def crawl():
     except Exception as e:
         ws.close()
         print('connection closed ' + e)
-    return None
+    return ""
 
 
 async def crawl_posts(post_urls, ws):
@@ -52,4 +54,5 @@ async def crawl_posts(post_urls, ws):
 
 if __name__ == "__main__":
     run_with_ngrok(app)
+    CORS(app)
     app.run()
