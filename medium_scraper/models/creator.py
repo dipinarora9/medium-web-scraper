@@ -3,8 +3,7 @@ from medium_scraper import db
 
 
 class Creator(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    profile_url = db.Column(db.Text, unique=True)
+    profile_url = db.Column(db.Text, primary_key=True)
     name = db.Column(db.Text, nullable=False)
     image_url = db.Column(db.Text, nullable=True)
     bio = db.Column(db.Text, nullable=True)

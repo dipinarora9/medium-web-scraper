@@ -49,29 +49,15 @@ class PostParser:
             for post_tag_map in post_object["tags"]
         ]
 
-    def to_json(self) -> str:
-        data = {}
-        data["id"] = self.id
-        data["title"] = self.title
-        data["created_at"] = self.created_at
-        data["description"] = self.description
-        data["medium_url"] = self.medium_url
-        data["paragraphs"] = self.paragraphs
-        data["creator"] = self.creator_parser.to_dict()
-        data["tags"] = self.tags
-        data["claps_count"] = self.claps_count
-        data["responses_count"] = self.responses_count
-        return json.dumps(data)
-
     def to_post(self) -> Post:
-        post = Post()
+        creator = self.creator_parser.to_creator()
+        post = Post(creator=creator)
         post.id = self.id
         post.title = self.title
         post.created_at = self.created_at
         post.description = self.description
         post.medium_url = self.medium_url
         post.paragraphs = json.dumps(self.paragraphs)
-        post.creator = self.creator_parser.to_creator()
         post.tags = json.dumps(self.tags)
         post.claps_count = self.claps_count
         post.responses_count = self.responses_count

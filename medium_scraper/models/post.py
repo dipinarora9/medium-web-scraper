@@ -12,8 +12,8 @@ class Post(db.Model):
     tags = db.Column(db.Text, nullable=False)
     claps_count = db.Column(db.Integer, nullable=False)
     responses_count = db.Column(db.Integer, nullable=False)
-    creator_id = db.Column(db.Integer,
-                           db.ForeignKey('creator.id'),
+    creator_id = db.Column(db.Text,
+                           db.ForeignKey('creator.profile_url'),
                            nullable=False)
 
     def __repr__(self):

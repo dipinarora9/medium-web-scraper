@@ -12,10 +12,20 @@ async def crawl_posts(post_urls, ws):
         ws.send(post.to_json())
 
     def save_post_to_db(post):
-        creator = Creator.query.filter_by(id=post.creator_id).first()
-        if creator is None:
-            db.session.add(post.creator)
-        db.session.add(post)
+        creator = Creator.query.filter_by(
+            profile_url=post.creator.profile_url).first()
+        if creator is not None:
+            creator = post.creator
+            creator.posts.append(post)
+            del post.creator
+            post.creator_id = creator.profile_url
+            db.session.add(post)
+        else:
+            creator = post.creator
+            del post.creator
+            creator.posts.append(post)
+            db.session.add(creator)
+            db.session.add(post)
         db.session.commit()
 
     def send_post_to_client_and_save_to_db(future):
