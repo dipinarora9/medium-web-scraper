@@ -1,5 +1,6 @@
 import asyncio
 import json
+import sys
 import simple_websocket
 from flask import Blueprint, jsonify, request
 from medium_scraper.controller.post_controller import PostController
@@ -32,8 +33,10 @@ def crawl():
     post_urls = ws.receive()
     post_urls = json.loads(post_urls)
     try:
-        #only for windows
-        asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+        if sys.platform == 'win32':
+            #only for windows
+            asyncio.set_event_loop_policy(
+                asyncio.WindowsSelectorEventLoopPolicy())
         asyncio.new_event_loop().run_until_complete(crawl_posts(post_urls, ws))
         ws.close()
     except (KeyboardInterrupt, EOFError):
