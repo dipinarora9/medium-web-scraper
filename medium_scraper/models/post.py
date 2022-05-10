@@ -12,7 +12,7 @@ class Post(db.Model):
     tags = db.Column(db.Text, nullable=False)
     claps_count = db.Column(db.Integer, nullable=False)
     responses_count = db.Column(db.Integer, nullable=False)
-    creator_id = db.Column(db.Text,
+    creator_id = db.Column(db.Integer,
                            db.ForeignKey('creator.id'),
                            nullable=False)
 
