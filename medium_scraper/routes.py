@@ -43,5 +43,5 @@ def crawl():
         print('connection closed')
     except Exception as e:
         ws.close()
-        print('closing connection due to ' + e)
+        print('closing connection due to ' + str(e))
     return ""
