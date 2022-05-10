@@ -6,7 +6,7 @@ class Post(db.Model):
     __tablename__ = 'posts'
     id = db.Column(db.String(20), primary_key=True)
     title = db.Column(db.Text, nullable=False)
-    created_at = db.Column(db.Integer, nullable=False)
+    created_at = db.Column(db.BigInteger, nullable=False)
     description = db.Column(db.Text, nullable=False)
     medium_url = db.Column(db.Text, unique=True, nullable=False)
     paragraphs = db.Column(db.Text, nullable=False)
