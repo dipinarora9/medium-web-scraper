@@ -49,28 +49,19 @@ class PostController:
         return {"related_tags": related_tags, "post_urls": post_urls}
 
     @staticmethod
-    def fetch_more_post_urls(tag, page):
+    def fetch_more_post_urls(tag, page_number):
         #tag filtering to check for js scripts
-        response = requests.get(
-            f"https://medium.com/search?q={tag}?page={page}")
+        pages = ['year', "all-time"]
+        page = pages[page_number - 1]
+        response = requests.get(f"https://medium.com/tag/{tag}/top/{page}")
 
         graphql_query_data_json = PostController._parse_graphql_response_in_json(
             response.text)
-
-        search_data = graphql_query_data_json["Search:{}"]
-
-        # technically this could throw can exception but for unknown reasons medium is always returning articles
-        posts_map_list = search_data[
-            f"posts-{tag}?page={page}(limit:10)(algoliaOptions:analyticsTags:web,clickAnalytics:true,filters:writtenByHighQualityUser:true)(searchInCollection:false)"][
-                "items"]
-
-        post_ids = [post_map["__ref"] for post_map in posts_map_list]
-
         post_urls = []
 
-        for post_id in post_ids:
-            post_urls.append(graphql_query_data_json[post_id]["mediumUrl"])
-
+        for k, v in graphql_query_data_json.items():
+            if k.startswith("Post:"):
+                post_urls.append(v["mediumUrl"])
         return post_urls
 
     @staticmethod
