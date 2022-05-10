@@ -3,21 +3,39 @@ import json
 import sys
 import simple_websocket
 from flask import Blueprint, jsonify, request
+from medium_scraper import db
 from medium_scraper.controller.post_controller import PostController
 from medium_scraper.utilities import crawl_posts
+from medium_scraper.models.tag import Tag
 
 main = Blueprint('main', __name__)
 
 
 @main.route('/')
 def index():
-    return jsonify("its working done worry!")
+    return jsonify("its working don't worry!")
+
+
+@main.route('/trending_tags')
+def trending_tags():
+    t = Tag.query.order_by(Tag.counter.desc()).limit(5).all()
+    tags = []
+    for tag in t:
+        tags.append(tag.tag)
+    return jsonify(tags)
 
 
 @main.route('/search/<string:tag>')
 def search(tag):
     post_urls_and_related_tags = PostController.fetch_latest_post_urls_and_related_tags(
         tag)
+    if post_urls_and_related_tags['post_urls']:
+        t = Tag.query.filter_by(tag=tag).first()
+        if t is None:
+            db.session.add(Tag(tag=tag, counter=1))
+        else:
+            t.counter = Tag.counter + 1
+        db.session.commit()
     return jsonify(post_urls_and_related_tags)
 
 

@@ -1,4 +1,3 @@
-from enum import unique
 from medium_scraper import db
 
 

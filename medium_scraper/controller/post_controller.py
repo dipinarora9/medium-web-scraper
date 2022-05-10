@@ -50,6 +50,9 @@ class PostController:
 
     @staticmethod
     def fetch_more_post_urls(tag, page_number):
+        if page_number > 2:
+            return []
+
         #tag filtering to check for js scripts
         pages = ['year', "all-time"]
         page = pages[page_number - 1]
