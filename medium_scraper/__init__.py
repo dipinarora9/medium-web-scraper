@@ -24,6 +24,7 @@ def create_app(config_class=Config):
     app.register_blueprint(word_helper)
 
     # with app.app_context():
+    #     db.drop_all()
     #     db.create_all()
 
     CORS(app)

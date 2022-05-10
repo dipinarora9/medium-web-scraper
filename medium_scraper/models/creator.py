@@ -1,12 +1,14 @@
+from enum import unique
 from medium_scraper import db
 
 
 class Creator(db.Model):
-    __tablename__ = 'creators'
-    profile_url = db.Column(db.Text, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
+    profile_url = db.Column(db.Text, unique=True)
     name = db.Column(db.Text, nullable=False)
     image_url = db.Column(db.Text, nullable=True)
     bio = db.Column(db.Text, nullable=True)
+    posts = db.relationship('Post', backref=db.backref('creator', lazy=True))
 
     def __repr__(self):
         return '<Creator %r>' % self.name

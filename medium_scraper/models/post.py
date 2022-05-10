@@ -3,7 +3,6 @@ from medium_scraper import db
 
 
 class Post(db.Model):
-    __tablename__ = 'posts'
     id = db.Column(db.String(20), primary_key=True)
     title = db.Column(db.Text, nullable=False)
     created_at = db.Column(db.BigInteger, nullable=False)
@@ -14,10 +13,8 @@ class Post(db.Model):
     claps_count = db.Column(db.Integer, nullable=False)
     responses_count = db.Column(db.Integer, nullable=False)
     creator_id = db.Column(db.Text,
-                           db.ForeignKey('creators.profile_url'),
+                           db.ForeignKey('creator.id'),
                            nullable=False)
-    creator = db.relationship('Creator',
-                              backref=db.backref('posts', lazy=True))
 
     def __repr__(self):
         return '<Post %r>' % self.id

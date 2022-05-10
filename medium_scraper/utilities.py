@@ -1,6 +1,7 @@
 import aiohttp
 import asyncio
 from medium_scraper.controller.post_controller import PostController
+from medium_scraper.models.creator import Creator
 from medium_scraper.models.post import Post
 from medium_scraper import db
 
@@ -11,6 +12,9 @@ async def crawl_posts(post_urls, ws):
         ws.send(post.to_json())
 
     def save_post_to_db(post):
+        creator = Creator.query.filter_by(id=post.creator_id).first()
+        if creator is None:
+            db.session.add(post.creator)
         db.session.add(post)
         db.session.commit()
 
