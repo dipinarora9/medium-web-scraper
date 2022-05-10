@@ -1,13 +1,15 @@
-from medium_scraper.models.constants import MEDIUM_ASSETS_BASE_URL, MEDIUM_USER_BASE_URL
+from medium_scraper import db
 
 
-class Creator:
+class Creator(db.Model):
+    __tablename__ = 'creators'
+    profile_url = db.Column(db.Text, primary_key=True)
+    name = db.Column(db.Text, nullable=False)
+    image_url = db.Column(db.Text, nullable=True)
+    bio = db.Column(db.Text, nullable=True)
 
-    def __init__(self, user_object):
-        self.profile_url = MEDIUM_USER_BASE_URL + user_object["username"]
-        self.name = user_object["name"]
-        self.image_url = MEDIUM_ASSETS_BASE_URL + user_object["imageId"]
-        self.bio = user_object["bio"]
+    def __repr__(self):
+        return '<Creator %r>' % self.name
 
     def to_dict(self) -> dict:
         data = {}

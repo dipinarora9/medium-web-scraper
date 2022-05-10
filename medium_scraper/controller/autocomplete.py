@@ -5,7 +5,7 @@ class TrieNode:
         self.children = dict()
 
         # isEndOfWord is True if node represent the end of the word
-        self.isEndOfWord = False
+        self.isEndOfWord = 0
         self.suggestions = []
 
 
@@ -36,7 +36,7 @@ class Trie:
             pCrawl = pCrawl.children[char]
 
         # mark last node as leaf
-        pCrawl.isEndOfWord = True
+        pCrawl.isEndOfWord += 1
 
     def search(self, key):
 

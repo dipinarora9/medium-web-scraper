@@ -2,12 +2,13 @@ import json
 from bs4 import BeautifulSoup
 import requests
 from medium_scraper.models.post import Post
+from medium_scraper.models.post_parser import PostParser
 
 
 class PostController:
 
     @staticmethod
-    async def fetch_post(post_url, session, ws) -> Post:
+    async def fetch_post(post_url, session) -> Post:
 
         async def scrape(session):
             async with session.get(post_url) as res:
@@ -23,9 +24,9 @@ class PostController:
         graphql_query_data_json = PostController._parse_graphql_response_in_json(
             response_text)
 
-        post = Post(graphql_query_data_json, post_id)
-        ws.send(post.to_json())
-        return post
+        parsed_post = PostParser(graphql_query_data_json, post_id)
+
+        return parsed_post.to_post()
 
     @staticmethod
     def fetch_latest_post_urls_and_related_tags(tag):
