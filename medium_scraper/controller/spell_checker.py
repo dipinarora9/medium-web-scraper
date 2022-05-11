@@ -10,11 +10,8 @@ from collections import Counter
 
 class SpellChecker:
 
-    def __init__(self, file_handler):
-        self.file_handler = file_handler
-
-    def init_spell_checker(self):
-        self.WORDS = Counter(self.file_handler.words)
+    def init_spell_checker(self, file_handler):
+        self.WORDS = Counter(file_handler.words)
 
     def P(self, word, N=None):
         if N is None:

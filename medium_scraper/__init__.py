@@ -11,7 +11,7 @@ app = Flask(__name__, template_folder='views')
 
 db = SQLAlchemy()
 file_handler = FileHandler()
-spellChecker = SpellChecker(file_handler)
+spellChecker = SpellChecker()
 autocomplete = AutoComplete()
 
 
@@ -19,16 +19,23 @@ def create_app(config_class=Config):
     app = Flask(__name__)
     app.config.from_object(Config)
 
-    db.init_app(app)
-    spellChecker.init_spell_checker()
     if Config.RUN_AUTOCOMPLETER:
         print('building trie')
+        file_handler.init_file_handler()
         autocomplete.init_trie(file_handler)
+        spellChecker.init_spell_checker(file_handler)
+    else:
+        db.init_app(app)
 
     from medium_scraper.routes import main
+    from medium_scraper.posts.app import posts
     from medium_scraper.word_helper.app import word_helper
+
+    if Config.RUN_AUTOCOMPLETER:
+        app.register_blueprint(word_helper)
+    else:
+        app.register_blueprint(posts)
     app.register_blueprint(main)
-    app.register_blueprint(word_helper)
 
     # with app.app_context():
     #     db.drop_all()
