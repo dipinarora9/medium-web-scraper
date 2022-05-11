@@ -9,7 +9,7 @@ class Config:
         'SQLALCHEMY_DATABASE_URI', f"sqlite:///{LOCAL_DATABASE_LOCATION}")
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_ECHO = False
-    RUN_AUTOCOMPLETER = os.environ.get('RUN_AUTOCOMPLETER', False)
+    RUN_AUTOCOMPLETER = os.environ.get('RUN_AUTOCOMPLETER', True)
     AUTO_COMPLETE_URL = os.environ.get(
         'AUTO_COMPLETE_URL',
         'https://medium-web-scraper-c5zky.ondigitalocean.app')
