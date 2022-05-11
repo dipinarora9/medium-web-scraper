@@ -23,19 +23,18 @@ def create_app(config_class=Config):
         print('building trie')
         file_handler.init_file_handler()
         autocomplete.init_trie(file_handler)
-        spellChecker.init_spell_checker(file_handler)
         print('trie built')
     else:
+        file_handler.init_file_handler()
+        spellChecker.init_spell_checker(file_handler)
         db.init_app(app)
 
     from medium_scraper.main import homepage
     from medium_scraper.posts.app import posts
     from medium_scraper.word_checker.app import word_checker
 
-    if Config.RUN_AUTOCOMPLETER:
-        app.register_blueprint(word_checker)
-    else:
-        app.register_blueprint(posts)
+    app.register_blueprint(word_checker)
+    app.register_blueprint(posts)
     app.register_blueprint(homepage)
 
     # with app.app_context():
