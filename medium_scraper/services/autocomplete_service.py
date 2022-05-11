@@ -16,13 +16,13 @@ class AutoComplete:
 
     def insert_word(self, keyword):
         if Config.RUN_AUTOCOMPLETER:
-            # with open(WORDS_FILE_LOCATION, 'a') as word_file:
-            #     word_file.write(keyword + '\n')
+            with open(WORDS_FILE_LOCATION, 'a') as word_file:
+                word_file.write(keyword + '\n')
             self._trie.insert(keyword.lower())
-        else:
-            thread = Thread(target=self.send_keyword_to_autocomplete_server,
-                            kwargs={'keyword': keyword})
-            thread.start()
+        # else:
+        #     thread = Thread(target=self.send_keyword_to_autocomplete_server,
+        #                     kwargs={'keyword': keyword})
+        #     thread.start()
 
     def send_keyword_to_autocomplete_server(self, keyword):
         try:
