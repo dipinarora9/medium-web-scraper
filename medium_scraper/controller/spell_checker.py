@@ -5,20 +5,16 @@ http://norvig.com/spell-correct.html
 '''
 
 import re
-import os
 from collections import Counter
 
 
 class SpellChecker:
 
-    def __init__(self):
-        self.WORDS = {}
+    def __init__(self, file_handler):
+        self.file_handler = file_handler
 
     def init_spell_checker(self):
-        BASE_PATH = os.path.dirname(__file__)
-        self.WORDS = Counter(
-            SpellChecker.words(
-                open(os.path.join(BASE_PATH, 'words.txt')).read()))
+        self.WORDS = Counter(self.file_handler.words)
 
     def P(self, word, N=None):
         if N is None:

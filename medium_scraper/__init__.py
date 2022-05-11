@@ -3,14 +3,16 @@ from flask_sqlalchemy import SQLAlchemy
 from flask import Flask
 from flask_cors import CORS
 from medium_scraper.config import Config
+from medium_scraper.controller.file_handler import FileHandler
 from medium_scraper.controller.spell_checker import SpellChecker
 from medium_scraper.controller.autocomplete import AutoComplete
 
 app = Flask(__name__, template_folder='views')
 
 db = SQLAlchemy()
-spellChecker = SpellChecker()
-autocomplete = AutoComplete()
+file_handler = FileHandler()
+spellChecker = SpellChecker(file_handler)
+autocomplete = AutoComplete(file_handler)
 
 
 def create_app(config_class=Config):

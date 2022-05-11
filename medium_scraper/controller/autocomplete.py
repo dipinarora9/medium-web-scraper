@@ -93,23 +93,15 @@ class Trie:
 
 class AutoComplete:
 
-    BASE_PATH = os.path.dirname(__file__)
+    def __init__(self, file_handler):
+        self.file_handler = file_handler
 
     def init_trie(self):
-        english_words = self.load_words()
-
         self._trie = Trie()
 
         # Construct trie
-        for key in english_words:
+        for key in self.file_handler.words:
             self._trie.insert(key.lower())
-
-    def load_words(self):
-        with open(os.path.join(AutoComplete.BASE_PATH,
-                               'words.txt')) as word_file:
-            valid_words = set(word_file.read().split())
-
-        return valid_words
 
     def insert_word(self, key):
         with open(os.path.join(AutoComplete.BASE_PATH, 'words.txt'),
