@@ -3,11 +3,11 @@ from flask_sqlalchemy import SQLAlchemy
 from flask import Flask
 from flask_cors import CORS
 from medium_scraper.config import Config
-from medium_scraper.controller.file_handler import FileHandler
-from medium_scraper.controller.spell_checker import SpellChecker
-from medium_scraper.controller.autocomplete import AutoComplete
+from medium_scraper.services.file_handler_service import FileHandler
+from medium_scraper.services.spell_checker_service import SpellChecker
+from medium_scraper.services.autocomplete_service import AutoComplete
 
-app = Flask(__name__, template_folder='views')
+app = Flask(__name__)
 
 db = SQLAlchemy()
 file_handler = FileHandler()
@@ -24,22 +24,24 @@ def create_app(config_class=Config):
         file_handler.init_file_handler()
         autocomplete.init_trie(file_handler)
         spellChecker.init_spell_checker(file_handler)
+        print('trie built')
     else:
         db.init_app(app)
 
-    from medium_scraper.routes import main
+    from medium_scraper.main import homepage
     from medium_scraper.posts.app import posts
-    from medium_scraper.word_helper.app import word_helper
+    from medium_scraper.word_checker.app import word_checker
 
     if Config.RUN_AUTOCOMPLETER:
-        app.register_blueprint(word_helper)
+        app.register_blueprint(word_checker)
     else:
         app.register_blueprint(posts)
-    app.register_blueprint(main)
+    app.register_blueprint(homepage)
 
     # with app.app_context():
-    #     db.drop_all()
-    #     db.create_all()
+    #     if not Config.RUN_AUTOCOMPLETER:
+    #         db.drop_all()
+    #         db.create_all()
 
     CORS(app)
     return app

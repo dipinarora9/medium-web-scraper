@@ -1,7 +1,7 @@
 import json
-from medium_scraper.models.constants import MEDIUM_ASSETS_BASE_URL
-from medium_scraper.models.creator_parser import CreatorParser
-from medium_scraper.models.post import Post
+from medium_scraper.helpers.constants import MEDIUM_ASSETS_BASE_URL
+from medium_scraper.posts.parsers.creator_parser import CreatorParser
+from medium_scraper.posts.models.post import Post
 
 
 class PostParser:
@@ -49,7 +49,7 @@ class PostParser:
             for post_tag_map in post_object["tags"]
         ]
 
-    def to_post(self) -> Post:
+    def to_post(self, time_taken) -> Post:
         creator = self.creator_parser.to_creator()
         post = Post(creator=creator)
         post.id = self.id
@@ -61,6 +61,7 @@ class PostParser:
         post.tags = json.dumps(self.tags)
         post.claps_count = self.claps_count
         post.responses_count = self.responses_count
+        post.time_taken_to_crawl = time_taken
         return post
 
     @staticmethod

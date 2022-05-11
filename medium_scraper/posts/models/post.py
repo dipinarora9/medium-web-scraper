@@ -15,6 +15,7 @@ class Post(db.Model):
     creator_id = db.Column(db.Text,
                            db.ForeignKey('creator.profile_url'),
                            nullable=False)
+    time_taken_to_crawl = 0
 
     def __repr__(self):
         return '<Post %r>' % self.id
@@ -31,4 +32,5 @@ class Post(db.Model):
         data["tags"] = json.loads(self.tags)
         data["claps_count"] = self.claps_count
         data["responses_count"] = self.responses_count
+        data["time_taken_to_crawl"] = self.time_taken_to_crawl
         return json.dumps(data)

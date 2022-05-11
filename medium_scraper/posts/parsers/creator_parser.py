@@ -1,5 +1,5 @@
-from medium_scraper.models.constants import MEDIUM_ASSETS_BASE_URL, MEDIUM_USER_BASE_URL
-from medium_scraper.models.creator import Creator
+from medium_scraper.helpers.constants import *
+from medium_scraper.posts.models.creator import Creator
 
 
 class CreatorParser:

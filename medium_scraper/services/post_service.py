@@ -1,11 +1,12 @@
 import json
 from bs4 import BeautifulSoup
 import requests
-from medium_scraper.models.post import Post
-from medium_scraper.models.post_parser import PostParser
+import time
+from medium_scraper.posts.models.post import Post
+from medium_scraper.posts.parsers.post_parser import PostParser
 
 
-class PostController:
+class PostService:
 
     @staticmethod
     async def fetch_post(post_url, session) -> Post:
@@ -16,17 +17,19 @@ class PostController:
                     text = await res.text()
                     return text
 
+        t = time.time()
         #tag filtering to check for js scripts
         post_id = post_url.split('-')[-1]
 
         response_text = await scrape(session)
 
-        graphql_query_data_json = PostController._parse_graphql_response_in_json(
+        graphql_query_data_json = PostService._parse_graphql_response_in_json(
             response_text)
 
         parsed_post = PostParser(graphql_query_data_json, post_id)
-
-        return parsed_post.to_post()
+        time_taken = time.time() - t
+        time_taken = round(time_taken, 3)
+        return parsed_post.to_post(time_taken)
 
     @staticmethod
     def fetch_latest_post_urls_and_related_tags(tag):
@@ -34,7 +37,7 @@ class PostController:
 
         response = requests.get(f"https://medium.com/tag/{tag}/latest")
 
-        graphql_query_data_json = PostController._parse_graphql_response_in_json(
+        graphql_query_data_json = PostService._parse_graphql_response_in_json(
             response.text)
 
         related_tags = []
@@ -58,7 +61,7 @@ class PostController:
         page = pages[page_number - 1]
         response = requests.get(f"https://medium.com/tag/{tag}/top/{page}")
 
-        graphql_query_data_json = PostController._parse_graphql_response_in_json(
+        graphql_query_data_json = PostService._parse_graphql_response_in_json(
             response.text)
         post_urls = []
 
