@@ -20,8 +20,11 @@ def create_app(config_class=Config):
     app.config.from_object(Config)
 
     db.init_app(app)
+    print('Initializing spell checker')
     spellChecker.init_spell_checker()
-    autocomplete.init_trie()
+    print('Initializing autocompleter')
+    autocomplete.init_trie(file_handler)
+    print('Initialization complete')
 
     from medium_scraper.routes import main
     from medium_scraper.word_helper.app import word_helper

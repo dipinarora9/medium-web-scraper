@@ -93,14 +93,11 @@ class Trie:
 
 class AutoComplete:
 
-    def __init__(self, file_handler):
-        self.file_handler = file_handler
-
-    def init_trie(self):
+    def init_trie(self, file_handler):
         self._trie = Trie()
 
         # Construct trie
-        for key in self.file_handler.words:
+        for key in file_handler.words:
             self._trie.insert(key.lower())
 
     def insert_word(self, key):
