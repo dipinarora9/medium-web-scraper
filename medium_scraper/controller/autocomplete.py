@@ -1,5 +1,7 @@
 import os
 
+import requests
+
 
 class TrieNode:
 
@@ -92,6 +94,7 @@ class Trie:
 
 
 class AutoComplete:
+    BASE_PATH = os.path.dirname(__file__)
 
     def init_trie(self, file_handler):
         self._trie = Trie()
@@ -105,6 +108,13 @@ class AutoComplete:
                   'a') as word_file:
             word_file.write(key + '\n')
         return self._trie.insert(key.lower())
+
+    def send_keyword_to_autocomplete_server(self, key):
+        autocomplete_server_url = os.environ.get(
+            'AUTO_COMPLETE_URL',
+            'https://medium-web-scraper-c5zky.ondigitalocean.app')
+        requests.get(autocomplete_server_url + '/insert_autocomplete_word/' +
+                     key)
 
     def suggest_next_word(self, key):
         return self._trie.suggest_next_word(key)

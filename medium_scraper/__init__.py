@@ -21,7 +21,8 @@ def create_app(config_class=Config):
 
     db.init_app(app)
     spellChecker.init_spell_checker()
-    autocomplete.init_trie(file_handler)
+    if Config.RUN_AUTOCOMPLETER:
+        autocomplete.init_trie(file_handler)
 
     from medium_scraper.routes import main
     from medium_scraper.word_helper.app import word_helper
@@ -33,4 +34,5 @@ def create_app(config_class=Config):
     #     db.create_all()
 
     CORS(app)
+    print('returning app')
     return app

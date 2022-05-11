@@ -4,6 +4,7 @@ import sys
 import simple_websocket
 from flask import Blueprint, jsonify, request
 from medium_scraper import db, autocomplete
+from medium_scraper.config import Config
 from medium_scraper.controller.post_controller import PostController
 from medium_scraper.utilities import crawl_posts
 from medium_scraper.models.tag import Tag
@@ -31,7 +32,11 @@ def search(tag):
         tag)
     if post_urls_and_related_tags['post_urls']:
         t = Tag.query.filter_by(tag=tag).first()
-        autocomplete.insert_word(tag)
+        if Config.RUN_AUTOCOMPLETER:
+            autocomplete.insert_word(tag)
+        else:
+            autocomplete.send_keyword_to_autocomplete_server(tag)
+
         if t is None:
             db.session.add(Tag(tag=tag, counter=1))
         else:
