@@ -3,9 +3,9 @@ from medium_scraper.posts.models.post import Post
 
 def test_new_post():
     """
-    GIVEN a User model
-    WHEN a new User is created
-    THEN check the email, hashed_password, and role fields are defined correctly
+    GIVEN a Post model
+    WHEN a new Post is created
+    THEN check that its fields are defined correctly
     """
     post = Post(
         id='abc',
