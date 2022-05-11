@@ -12,7 +12,7 @@ app = Flask(__name__, template_folder='views')
 db = SQLAlchemy()
 file_handler = FileHandler()
 spellChecker = SpellChecker(file_handler)
-autocomplete = AutoComplete(file_handler)
+autocomplete = AutoComplete()
 
 
 def create_app(config_class=Config):
