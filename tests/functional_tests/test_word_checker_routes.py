@@ -1,7 +1,7 @@
 def test_typo_check(test_client_without_autocomplete):
     """
-    GIVEN a Flask application configured for testing
-    WHEN the '/' page is requested (GET)
+    GIVEN Without autocomplete client
+    WHEN the '/typo_check/clokc' page is requested (GET)
     THEN check that the response is valid
     """
     response = test_client_without_autocomplete.get('/typo_check/clokc')
@@ -10,8 +10,8 @@ def test_typo_check(test_client_without_autocomplete):
 
 def test_typo_check_post(test_client_without_autocomplete):
     """
-    GIVEN a Flask application configured for testing
-    WHEN the '/' page is is posted to (POST)
+    GIVEN Without autocomplete client
+    WHEN the '/typo_check/clokc' page is is posted to (POST)
     THEN check that a '405' status code is returned
     """
     response = test_client_without_autocomplete.post('/typo_check/clokc')
@@ -21,8 +21,8 @@ def test_typo_check_post(test_client_without_autocomplete):
 
 def test_insert_autocomplete_word(test_client_with_autocomplete):
     """
-    GIVEN a Flask application configured for testing
-    WHEN the '/' page is requested (GET)
+    GIVEN With autocomplete client
+    WHEN the '/insert_autocomplete_word/blue' page is requested (GET)
     THEN check that the response is valid
     """
     response = test_client_with_autocomplete.get(
@@ -33,8 +33,8 @@ def test_insert_autocomplete_word(test_client_with_autocomplete):
 
 def test_insert_autocomplete_word_post(test_client_with_autocomplete):
     """
-    GIVEN a Flask application configured for testing
-    WHEN the '/' page is is posted to (POST)
+    GIVEN With autocomplete client
+    WHEN the '/insert_autocomplete_word/blue' page is is posted to (POST)
     THEN check that a '405' status code is returned
     """
     response = test_client_with_autocomplete.post(

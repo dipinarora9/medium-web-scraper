@@ -1,6 +1,6 @@
 def test_home_page(test_client_without_autocomplete):
     """
-    GIVEN a Flask application configured for testing
+    GIVEN Without autocomplete client
     WHEN the '/' page is requested (GET)
     THEN check that the response is valid
     """
@@ -11,7 +11,7 @@ def test_home_page(test_client_without_autocomplete):
 
 def test_home_page_post(test_client_without_autocomplete):
     """
-    GIVEN a Flask application configured for testing
+    GIVEN Without autocomplete client
     WHEN the '/' page is is posted to (POST)
     THEN check that a '405' status code is returned
     """
@@ -22,7 +22,7 @@ def test_home_page_post(test_client_without_autocomplete):
 
 def test_home_page(test_client_with_autocomplete):
     """
-    GIVEN a Flask application configured for testing
+    GIVEN With autocomplete client
     WHEN the '/' page is requested (GET)
     THEN check that the response is valid
     """
@@ -33,7 +33,7 @@ def test_home_page(test_client_with_autocomplete):
 
 def test_home_page_post(test_client_with_autocomplete):
     """
-    GIVEN a Flask application configured for testing
+    GIVEN With autocomplete client
     WHEN the '/' page is is posted to (POST)
     THEN check that a '405' status code is returned
     """
