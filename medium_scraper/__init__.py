@@ -22,6 +22,7 @@ def create_app(config_class=Config):
     db.init_app(app)
     spellChecker.init_spell_checker()
     if Config.RUN_AUTOCOMPLETER:
+        print('building trie')
         autocomplete.init_trie(file_handler)
 
     from medium_scraper.routes import main
