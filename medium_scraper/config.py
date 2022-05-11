@@ -7,4 +7,4 @@ class Config:
                                              'sqlite:///abc.db')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_ECHO = False
-    RUN_AUTOCOMPLETER = os.environ.get('RUN_AUTOCOMPLETER', False)
+    RUN_AUTOCOMPLETER = os.environ.get('RUN_AUTOCOMPLETER', True)
