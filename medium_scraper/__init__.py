@@ -4,11 +4,13 @@ from flask import Flask
 from flask_cors import CORS
 from medium_scraper.config import Config
 from medium_scraper.controller.spell_checker import SpellChecker
+from medium_scraper.controller.autocomplete import AutoComplete
 
 app = Flask(__name__, template_folder='views')
 
 db = SQLAlchemy()
 spellChecker = SpellChecker()
+autocomplete = AutoComplete()
 
 
 def create_app(config_class=Config):
@@ -17,6 +19,7 @@ def create_app(config_class=Config):
 
     db.init_app(app)
     spellChecker.init_spell_checker()
+    autocomplete.init_trie()
 
     from medium_scraper.routes import main
     from medium_scraper.word_helper.app import word_helper

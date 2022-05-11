@@ -1,11 +1,12 @@
+import os
+
+
 class TrieNode:
 
     # Trie node class
     def __init__(self):
         self.children = dict()
-
-        # isEndOfWord is True if node represent the end of the word
-        self.isEndOfWord = 0
+        self.score = 0
         self.suggestions = []
 
 
@@ -36,7 +37,7 @@ class Trie:
             pCrawl = pCrawl.children[char]
 
         # mark last node as leaf
-        pCrawl.isEndOfWord += 1
+        pCrawl.score += 1
 
     def search(self, key):
 
@@ -51,7 +52,7 @@ class Trie:
                 return False
             pCrawl = pCrawl.children[char]
 
-        return pCrawl.isEndOfWord
+        return pCrawl.score
 
     def suggest_next_word(self, key):
 
@@ -65,29 +66,67 @@ class Trie:
             if char not in pCrawl.children:
                 return []
             pCrawl = pCrawl.children[char]
+        suggestions = dict()
 
-        return pCrawl.isEndOfWord
+        # suggestion logic
+        for k, v in pCrawl.children.items():
+            if v.score:
+                suggestions[key + k] = v.score
+
+        for k, v in pCrawl.children.items():
+            for sub_child_k, sub_child_v in v.children.items():
+                if sub_child_v.score:
+                    suggestions[key + k + sub_child_k] = sub_child_v.score
+                for sub_sub_child_k, sub_sub_child_v in sub_child_v.children.items(
+                ):
+                    if sub_sub_child_v.score:
+                        suggestions[key + k + sub_child_k +
+                                    sub_sub_child_k] = sub_sub_child_v.score
+
+        suggestions = sorted(suggestions.keys(),
+                             key=lambda x: suggestions[x],
+                             reverse=True)
+
+        pCrawl.suggestions.extend(suggestions[:5])
+        return pCrawl.suggestions
 
 
-def load_words():
-    with open(
-            'E:\Projects\GITHUB\medium-web-scraper\medium_scraper\controller\words.txt'
-    ) as word_file:
-        valid_words = set(word_file.read().split())
+class AutoComplete:
 
-    return valid_words
+    BASE_PATH = os.path.dirname(__file__)
+
+    def init_trie(self):
+        english_words = self.load_words()
+
+        self._trie = Trie()
+
+        # Construct trie
+        for key in english_words:
+            self._trie.insert(key.lower())
+
+    def load_words(self):
+        with open(os.path.join(AutoComplete.BASE_PATH,
+                               'words.txt')) as word_file:
+            valid_words = set(word_file.read().split())
+
+        return valid_words
+
+    def insert_word(self, key):
+        with open(os.path.join(AutoComplete.BASE_PATH, 'words.txt'),
+                  'a') as word_file:
+            word_file.write(key + '\n')
+        return self._trie.insert(key.lower())
+
+    def suggest_next_word(self, key):
+        return self._trie.suggest_next_word(key)
 
 
 if __name__ == "__main__":
-    english_words = load_words()
-
-    t = Trie()
-
-    # Construct trie
-    for key in english_words:
-        t.insert(key)
+    ac = AutoComplete()
+    ac.init_trie()
 
     print("words inserted")
+    print(ac.suggest_next_word('ab'))
     # while True:
     #     wor = input("word: ")
     #     print(t.search(wor))
