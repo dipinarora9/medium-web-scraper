@@ -89,8 +89,7 @@ class Trie:
                              key=lambda x: suggestions[x],
                              reverse=True)
 
-        pCrawl.suggestions.extend(suggestions[:5])
-        return pCrawl.suggestions
+        return suggestions[:5]
 
 
 class AutoComplete:

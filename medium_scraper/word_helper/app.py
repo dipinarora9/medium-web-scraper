@@ -1,3 +1,4 @@
+import json
 import simple_websocket
 from flask import Blueprint, jsonify, request
 from medium_scraper import spellChecker, autocomplete
@@ -21,7 +22,7 @@ if Config.RUN_AUTOCOMPLETER:
             while True:
                 keyword = ws.receive()
                 suggestions = autocomplete.suggest_next_word(keyword)
-                ws.send(suggestions)
+                ws.send(json.dumps(suggestions))
         except (KeyboardInterrupt, EOFError):
             ws.close()
             print('closing connection')
