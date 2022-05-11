@@ -36,7 +36,6 @@ class PostService:
         #tag filtering to check for js scripts
 
         response = requests.get(f"https://medium.com/tag/{tag}/latest")
-
         graphql_query_data_json = PostService._parse_graphql_response_in_json(
             response.text)
 

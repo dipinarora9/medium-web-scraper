@@ -1,3 +1,4 @@
+from threading import Thread
 import requests
 from medium_scraper.word_checker.models.trie import Trie
 from medium_scraper.config import Config
@@ -19,7 +20,9 @@ class AutoComplete:
                 word_file.write(keyword + '\n')
             self._trie.insert(keyword.lower())
         else:
-            self.send_keyword_to_autocomplete_server(keyword)
+            thread = Thread(target=self.send_keyword_to_autocomplete_server,
+                            kwargs={'keyword': keyword})
+            thread.start()
 
     def send_keyword_to_autocomplete_server(self, keyword):
         try:
